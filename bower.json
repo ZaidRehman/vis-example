@@ -1,0 +1,16 @@
+{
+  "name": "tsexample3",
+  "description": "",
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer-ts": "^0.2.3",
+    "polymer": "1.11.3"
+  }
+}

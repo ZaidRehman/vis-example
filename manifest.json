@@ -1,0 +1,7 @@
+{
+  "name": "Hullo Assignment",
+  "short_name": "Hullo Assignment",
+  "description": "Chat App",
+  "start_url": "/",
+  "display": "standalone"
+}
