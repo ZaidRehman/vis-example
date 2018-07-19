@@ -5,3 +5,7 @@
 html, body, div {
     height: 100%;
 }
+
+canvas {
+    background-color: #CCCCCC;
+}
