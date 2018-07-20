@@ -1,40 +1,42 @@
 /// <reference path="../bower_components/polymer-ts/polymer-ts.d.ts" />
 import { Network, DataSet } from 'vis/index-network'
+import { Car } from './Car';
 
-var drawPlay = (ctx, pos, fillColor, ext = 0) => {
-    for (var node in pos) {
-        var x = pos[node].x - 25;
-        var y = pos[node].y - 25;
-        var w = 50;
-        var h = 50;
+var drawPlay = (ctx, p, fillColor, ext = 0) => {
+    var w = 25;
+    var h = 25;
+    var x = p.x - w/2;
+    var y = p.y - h/2;
 
-        //Draw triangle
-        ctx.beginPath();
-        ctx.moveTo(x + w / 3, y + h / 3);
-        ctx.lineTo(x + w / 3, y + h - h / 3);
-        ctx.lineTo(x + w - w / 4, y + h / 2);
-        ctx.lineTo(x + w / 3, y + h / 3);
-        ctx.fillStyle = fillColor;
-        ctx.fill();
-    }
-}
-
-var drawPause = (ctx, nodePosition, nodeIds, pauseColor, nodeColor , ext = 0) => {
-    nodeIds.forEach(nodeId => {
-        ctx.strokeStyle = pauseColor;
-        ctx.lineWidth = 3;
-        ctx.fillStyle = nodeColor;
-        ctx.circle(nodePosition[nodeId].x, nodePosition[nodeId].y, 10 + ext);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.fillStyle = pauseColor;
-        ctx.rect(nodePosition[nodeId].x - 4, nodePosition[nodeId].y - 4, 8, 8)
-        ctx.fill();
-    });
+    //Draw triangle
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,12,0,2*Math.PI);
+    ctx.moveTo(x + w / 3, y + h / 3);
+    ctx.lineTo(x + w / 3, y + h - h / 3);
+    ctx.lineTo(x + w - w / 4, y + h / 2);
+    ctx.lineTo(x + w / 3, y + h / 3);
+    ctx.fillStyle = fillColor;
+    ctx.fill();
 
 }
+
+var drawPause = (ctx, p, pauseColor, nodeColor, ext = 0) => {
+
+    ctx.strokeStyle = pauseColor;
+    ctx.lineWidth = 3;
+    ctx.fillStyle = nodeColor;
+    ctx.circle(p.x, p.y, 12 + ext);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.fillStyle = pauseColor;
+    ctx.rect(p.x - 4, p.y - 4, 8, 8);
+    ctx.fill();
+    ctx.closePath();
+}
+
+
 
 var GraphView = Polymer(<any>{
     is: 'graph-view',
@@ -49,21 +51,24 @@ var GraphView = Polymer(<any>{
         var container = document.getElementById('graphDiv');
 
         var nodes = new DataSet([
-            { id: 1, label: '1' },
-            { id: 2, label: 'Node 2' },
-            { id: 3, label: 'Node 3' },
-            { id: 4, label: '4' },
-            { id: 5, label: 'Node 5' }
+            { id: 1, label: '1', car: new Car("XYZ", "2016") },
+            { id: 2, label: '2', shapeColor: 'rejected' },
+            { id: 3, label: '3' },
+            { id: 4, label: '4', shapeColor: 'accepted' },
+            { id: 5, label: '5', shapeColor: 'triggered' },
+            { id: 6, label: '6' },
+            { id: 7, label: '7', shapeColor: 'triggered' },
         ]);
 
         // create an array with edges
         var edges = new DataSet([
-            { from: 1, to: 3, },
+            { from: 1, to: 3 },
             { from: 1, to: 4 },
             { from: 1, to: 2 },
             { from: 2, to: 4 },
             { from: 2, to: 5 },
             { from: 3, to: 4 },
+            { from: 6, to: 7 },
         ]);
 
         // provide the data in the vis format
@@ -76,6 +81,12 @@ var GraphView = Polymer(<any>{
             height: '100%',
             width: '100%',
             nodes: {
+                margin: {
+                    top: -10,
+                    bottom: 10,
+                    left: 10,
+                    right: -10,
+                },
                 borderWidth: 1,
                 borderWidthSelected: 2,
                 color: {
@@ -91,42 +102,51 @@ var GraphView = Polymer(<any>{
                     }
                 },
                 font: {
+                    color: '#3f51b5',
+                    size: 19, // px
+                    face: 'Roboto',
+                    background: 'none',
+                    strokeWidth: 0, // px
+                    strokeColor: '#ffffff',
                     align: 'left',
-                    vadjust: -20,
-                },
+                    multi: false,
+                    vadjust: 0,
+                },          
                 fixed: {
                     x: true,
                     y: true
                 },
                 heightConstraint: {
-                    minimum: 50,
+                    minimum: 53,
                     valign: 'middle'
                 },
                 widthConstraint: {
-                    minimum: 50,
+                    minimum: 80,
                 },
-                shape: 'box',
+                shape: 'dialog',
                 shapeProperties: {
                     borderRadius: 3,
                 }
             },
             edges: {
                 arrows: {
-                    to: { enabled: true, scaleFactor: 0.5, type: 'circle' }
+                    from: { enabled: true, scaleFactor: 0.5, type: 'circle' },
+                    to: { enabled: true, scaleFactor: 0.5, type: 'arrow' }
                 },
                 color: {
-                    color: '#232635',
-                    highlight: '#232635',
-                    hover: '#232635',
+                    color: '#9b9b9b',
+                    highlight: '#9b9b9b',
+                    hover: '#9b9b9b',
                     inherit: 'from',
                     opacity: 1.0
                 },
+                length: 50,
                 font: '12px arial #ff0000',
                 scaling: {
                     label: true,
                 },
-
-                shadow: true,
+                selectionWidth: 0,
+                shadow: false,
                 smooth: {
                     enabled: true,
                     type: "straightCross",
@@ -146,7 +166,8 @@ var GraphView = Polymer(<any>{
                 hierarchical: {
                     enabled: true,
                     parentCentralization: true,
-                    levelSeparation: 100,
+                    levelSeparation: 150,
+                    nodeSpacing: 150,
                     direction: 'UD',
                     sortMethod: 'directed'
                 }
@@ -163,26 +184,27 @@ var GraphView = Polymer(<any>{
                 var clickedNodes = nodes.get(nodeIds);
                 console.log('clicked nodes:', clickedNodes);
 
-                network.on("afterDrawing", function (ctx) {
-                    var nodeId = properties.nodes[0];
-                    if (nodeId != undefined) {
-
-                        var nodePosition = network.getPositions([nodeId]);
-
-                        //Pause cliked node
-                        drawPlay(ctx, nodePosition, '#F4F4F6')
-                        drawPause(ctx,nodePosition,[nodeId], '#3F51B5', '#F4F4F6')
-
-                        var otherNodeIds = nodes.getIds()
-
-                        //Play all other nodes
-                        otherNodeIds.splice(nodes.getIds().indexOf(nodeId), 1)
-                        var otherNodePositions = network.getPositions(otherNodeIds);
-                        drawPause(ctx,otherNodePositions,otherNodeIds, '#F4F4F6', '#F4F4F6',.5)
-                        drawPlay(ctx, otherNodePositions, '#3F51B5')
+                // retrieve played nodes
+                var playedNodes = nodes.get({
+                    fields: ['id', 'played'],
+                    filter: function (node) {
+                        return node.played == true;
                     }
                 });
+
+                if (playedNodes[0] && playedNodes[0].played) {
+                    playedNodes[0].played = false
+                }
+
+                if (clickedNodes[0] && clickedNodes[0].played) {
+                    clickedNodes[0].played = false;
+                } else {
+                    clickedNodes[0].played = true;
+                }
+
+                nodes.update(clickedNodes.concat(playedNodes));
             }
+
 
             //edges
             var edgeIds = properties.edges;
@@ -194,7 +216,16 @@ var GraphView = Polymer(<any>{
 
         network.on('afterDrawing', function (ctx) {
             var pos = network.getPositions(nodes.getIds())
-            drawPlay(ctx, pos, '#3F51B5')
+
+            nodes.forEach(node => {
+                if (node.played) {
+                    drawPlay(ctx, pos[node.id], '#F4F4F6')
+                    drawPause(ctx, pos[node.id], '#3F51B5', '#F4F4F6')
+                } else {
+                    drawPause(ctx, pos[node.id], '#F4F4F6', '#F4F4F6')
+                    drawPlay(ctx, pos[node.id], '#3F51B5')
+                }
+            });
         });
     }
 });
