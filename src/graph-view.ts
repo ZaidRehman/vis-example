@@ -62,13 +62,13 @@ var GraphView = Polymer(<any>{
 
         // create an array with edges
         var edges = new DataSet([
-            { from: 1, to: 3 },
-            { from: 1, to: 4 },
-            { from: 1, to: 2 },
-            { from: 2, to: 4 },
-            { from: 2, to: 5 },
-            { from: 3, to: 4 },
-            { from: 6, to: 7 },
+            { from: 1, to: 3 , label: 'event', title: 'this is hover'},
+            { from: 1, to: 4 , label: 'event', title: 'this is hover'},
+            { from: 1, to: 2 , label: 'event', title: 'this is hover'},
+            { from: 2, to: 4 , label: 'event', title: 'this is hover'},
+            { from: 2, to: 5 , label: 'event', title: 'this is hover'},
+            { from: 3, to: 4 , label: 'event', title: 'this is hover'},
+            { from: 6, to: 7 , label: 'event', title: 'this is hover'},
         ]);
 
         // provide the data in the vis format
@@ -133,6 +133,7 @@ var GraphView = Polymer(<any>{
                     from: { enabled: true, scaleFactor: 0.5, type: 'circle' },
                     to: { enabled: true, scaleFactor: 0.5, type: 'arrow' }
                 },
+                arrowStrikethrough: false,
                 color: {
                     color: '#9b9b9b',
                     highlight: '#9b9b9b',
@@ -141,16 +142,27 @@ var GraphView = Polymer(<any>{
                     opacity: 1.0
                 },
                 length: 50,
-                font: '12px arial #ff0000',
                 scaling: {
                     label: true,
                 },
+                font: {
+                    color: '#9b9b9b',
+                    size: 14, // px
+                    face: 'Roboto',
+                    //background: 'none',
+                    strokeWidth: 0, // px
+                    strokeColor: '#9b9b9b',
+                    align: 'horizontal',
+                    multi: false,
+                },
+                hoverWidth: 5,
+                labelHighlightBold: false,
                 selectionWidth: 0,
                 shadow: false,
                 smooth: {
                     enabled: true,
-                    type: "straightCross",
-                    roundness: 0.5
+                    type: "cubicBezier",
+                    roundness: .8
                 },
             },
             physics: {
