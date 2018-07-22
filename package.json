@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "dependencies": {
-    "vis": "^4.21.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "glob": "^7.1.2",
     "gulp": "^3.9.1",

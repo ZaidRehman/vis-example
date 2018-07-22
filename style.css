@@ -9,3 +9,16 @@ html, body, div {
 canvas {
     background-color: #CCCCCC;
 }
+
+.vis-tooltip {
+    position: absolute;
+}
+.popup {
+    position:absolute;
+    top:0px;
+    left:0px;
+    display:none;
+    width:150px;
+    height:80px;
+    background-color:#ffff00;
+  }
