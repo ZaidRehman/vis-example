@@ -66,7 +66,7 @@ var GraphView = Polymer(<any>{
             // { id: 15, label: '15' },
             // { id: 16, label: '16' },
             // { id: 17, label: '17' },
-            
+
         ]);
 
         // create an array with edges
@@ -82,21 +82,21 @@ var GraphView = Polymer(<any>{
             { from: 7, to: 7, label: 'event', title: 'this is hover' },
             { from: 3, to: 8, label: 'event', title: 'this is hover' },
             { from: 8, to: 9, label: 'event', title: 'this is hover' },
-            { from: 3, to: 8 , label: 'event', title: 'this is hover'},
-            { from: 2, to: 9 , label: 'event', title: 'this is hover'},
-            { from: 3, to: 9 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 11 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 12 , label: 'event', title: 'this is hover'},
-            { from: 2, to: 11 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 13 , label: 'event', title: 'this is hover'},
-            { from: 12, to: 16 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 11 , label: 'event', title: 'this is hover'},
-            { from: 11, to: 17 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 1 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 15 , label: 'event', title: 'this is hover'},
-            { from: 4, to: 11 , label: 'event', title: 'this is hover'},
-            { from: 10, to: 14 , label: 'event', title: 'this is hover'},
-            { from: 8, to: 11 , label: 'event', title: 'this is hover'},
+            { from: 3, to: 8, label: 'event', title: 'this is hover' },
+            { from: 2, to: 9, label: 'event', title: 'this is hover' },
+            { from: 3, to: 9, label: 'event', title: 'this is hover' },
+            { from: 10, to: 11, label: 'event', title: 'this is hover' },
+            { from: 10, to: 12, label: 'event', title: 'this is hover' },
+            { from: 2, to: 11, label: 'event', title: 'this is hover' },
+            { from: 10, to: 13, label: 'event', title: 'this is hover' },
+            { from: 12, to: 16, label: 'event', title: 'this is hover' },
+            { from: 10, to: 11, label: 'event', title: 'this is hover' },
+            { from: 11, to: 17, label: 'event', title: 'this is hover' },
+            { from: 10, to: 1, label: 'event', title: 'this is hover' },
+            { from: 10, to: 15, label: 'event', title: 'this is hover' },
+            { from: 4, to: 11, label: 'event', title: 'this is hover' },
+            { from: 10, to: 14, label: 'event', title: 'this is hover' },
+            { from: 8, to: 11, label: 'event', title: 'this is hover' },
         ]);
 
         // provide the data in the vis format
@@ -105,7 +105,7 @@ var GraphView = Polymer(<any>{
             edges: edges
         };
         var options = {
-            // autoResize: true,
+            autoResize: true,
             height: '100%',
             width: '100%',
             nodes: {
@@ -174,17 +174,17 @@ var GraphView = Polymer(<any>{
                     label: true,
                 },
                 font: {
-                    color: '#232635',
+                    color: '#9b9b9b',
                     size: 14, // px
                     face: 'Roboto',
-                    //background: 'none',
+                    background: '#f2f2f2',
                     strokeWidth: 0, // px
-                    strokeColor: '#232635',
+                    strokeColor: '#9b9b9b',
                     align: 'horizontal',
                     //vadjust: 10,
                     multi: false,
                 },
-                hoverWidth: 5,
+                hoverWidth: 0,
                 labelHighlightBold: false,
                 selectionWidth: 1,
                 shadow: false,
@@ -212,12 +212,15 @@ var GraphView = Polymer(<any>{
                     treeSpacing: 100,
                     nodeSpacing: 250,
                     levelSeparation: 250,
-                    parentCentralization: true,
+                    //parentCentralization: true,
                     direction: 'UD',
                     sortMethod: 'directed',
                     edgeMinimization: true
                 }
             },
+            interaction: {
+                hover: true,
+            }
         };
 
         // initialize your network!
@@ -272,6 +275,19 @@ var GraphView = Polymer(<any>{
                     drawPlay(ctx, pos[node.id], '#3F51B5')
                 }
             });
+        });
+
+        network.on("hoverEdge", function (params) {
+            var tooltip = <HTMLElement>document.getElementById('custom-tooltip');
+            var x = params.pointer.DOM.x;
+            var y = params.pointer.DOM.y - 40;
+            tooltip.innerHTML = "<p id='tooltip-text' >" + edges.get(params.edge).title + '</p>';
+            tooltip.setAttribute('style', 'top:' + y + 'px;left:' + x + 'px;visibility:visible;');
+        });
+
+        network.on("blurEdge", function (params) {
+            var tooltip = <HTMLElement>document.getElementById('custom-tooltip');
+            tooltip.setAttribute('style', 'visibility:hidden;');
         });
     }
 });

@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "hammerjs": "^2.0.8",
+    "keycharm": "^0.2.0",
+    "moment": "^2.22.2",
+    "propagating-hammerjs": "^1.4.6"
+  },
   "devDependencies": {
     "glob": "^7.1.2",
     "gulp": "^3.9.1",

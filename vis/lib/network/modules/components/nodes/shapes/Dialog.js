@@ -58,33 +58,31 @@ class Dialog extends NodeBase {
       case 'accepted': headColor = '#70DC76'; break;
       case 'rejected': headColor = '#FF4200'; break;
       case 'triggered': headColor = '#5C6BC0'; break;
-      default: headColor = '#F4F4F6'
+      default: headColor = '#ffffff'
     }
     var radius = 4;
     var barHeight = 5;
 
-
+    //Draw Body
     ctx.beginPath();
-    ctx.strokeStyle = '#F4F4F6';
-    ctx.fillStyle = '#F4F4F6'
+    ctx.strokeStyle = '#ffffff';
+    ctx.fillStyle = '#ffffff'
     ctx.roundRect(this.left, this.top, this.width, this.height, radius);
     ctx.fill();
     ctx.closePath();
     ctx.stroke();
 
+    //Draw Head
     ctx.beginPath();
     ctx.strokeStyle = headColor;
     ctx.fillStyle = headColor;
-
     ctx.moveTo(this.left + radius, this.top);
     ctx.lineTo(this.left + this.width - radius, this.top);
-
     ctx.quadraticCurveTo(this.left + this.width, this.top , this.left + this.width, this.top + radius);
     ctx.lineTo(this.left + this.width, this.top + barHeight)
     ctx.lineTo(this.left,this.top + barHeight)
     ctx.lineTo(this.left,this.top + radius)
     ctx.quadraticCurveTo(this.left, this.top, this.left + radius, this.top);
-
     ctx.fill()
     ctx.closePath();
     ctx.stroke();
