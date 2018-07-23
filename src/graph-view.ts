@@ -11,10 +11,10 @@ var drawPlay = (ctx, p, fillColor, ext = 0) => {
     //Draw triangle
     ctx.beginPath();
     ctx.arc(p.x, p.y, 12, 0, 2 * Math.PI);
-    ctx.moveTo(x + w / 3, y + h / 3);
-    ctx.lineTo(x + w / 3, y + h - h / 3);
-    ctx.lineTo(x + w - w / 4, y + h / 2);
-    ctx.lineTo(x + w / 3, y + h / 3);
+    ctx.moveTo(x + 10, y + 7.5);
+    ctx.lineTo(x + 10, y + 17.5);
+    ctx.lineTo(x + 18.66, y + 12.5);
+    ctx.lineTo(x + 10, y + 7.5);
     ctx.fillStyle = fillColor;
     ctx.fill();
 
@@ -268,10 +268,10 @@ var GraphView = Polymer(<any>{
 
             nodes.forEach(node => {
                 if (node.played) {
-                    drawPlay(ctx, pos[node.id], '#F4F4F6')
-                    drawPause(ctx, pos[node.id], '#3F51B5', '#F4F4F6')
+                    drawPlay(ctx, pos[node.id], '#FFFFFF')
+                    drawPause(ctx, pos[node.id], '#3F51B5', '#FFFFFF')
                 } else {
-                    drawPause(ctx, pos[node.id], '#F4F4F6', '#F4F4F6')
+                    drawPause(ctx, pos[node.id], '#FFFFFF', '#FFFFFF')
                     drawPlay(ctx, pos[node.id], '#3F51B5')
                 }
             });
