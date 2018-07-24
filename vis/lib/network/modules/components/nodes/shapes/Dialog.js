@@ -65,6 +65,11 @@ class Dialog extends NodeBase {
 
     //Draw Body
     ctx.beginPath();
+    ctx.shadowColor = '#0000004d';
+    ctx.lineWidth = 0;
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 3;
     ctx.strokeStyle = '#ffffff';
     ctx.fillStyle = '#ffffff'
     ctx.roundRect(this.left, this.top, this.width, this.height, radius);
@@ -73,20 +78,22 @@ class Dialog extends NodeBase {
     ctx.stroke();
 
     //Draw Head
-    ctx.beginPath();
-    ctx.strokeStyle = headColor;
-    ctx.fillStyle = headColor;
-    ctx.moveTo(this.left + radius, this.top);
-    ctx.lineTo(this.left + this.width - radius, this.top);
-    ctx.quadraticCurveTo(this.left + this.width, this.top , this.left + this.width, this.top + radius);
-    ctx.lineTo(this.left + this.width, this.top + barHeight)
-    ctx.lineTo(this.left,this.top + barHeight)
-    ctx.lineTo(this.left,this.top + radius)
-    ctx.quadraticCurveTo(this.left, this.top, this.left + radius, this.top);
-    ctx.fill()
-    ctx.closePath();
-    ctx.stroke();
-
+    if(headColor !== '#ffffff'){
+      ctx.beginPath();
+      ctx.strokeStyle = headColor;
+      ctx.fillStyle = headColor;
+      ctx.moveTo(this.left + radius, this.top);
+      ctx.lineTo(this.left + this.width - radius, this.top);
+      ctx.quadraticCurveTo(this.left + this.width, this.top, this.left + this.width, this.top + radius);
+      ctx.lineTo(this.left + this.width, this.top + barHeight)
+      ctx.lineTo(this.left, this.top + barHeight)
+      ctx.lineTo(this.left, this.top + radius)
+      ctx.quadraticCurveTo(this.left, this.top, this.left + radius, this.top);
+      ctx.fill()
+      ctx.closePath();
+      ctx.stroke();  
+    }
+    
     this.updateBoundingBox(x, y, ctx, selected, hover);
     this.labelModule.draw(ctx, this.left + this.textSize.width / 2 + this.margin.left,
       this.top + this.textSize.height / 2 + this.margin.top, selected, hover);

@@ -2,31 +2,41 @@
 import { Network, DataSet } from '../vis/index-network'
 import { Car } from './Car';
 
-var drawPlay = (ctx, p, fillColor, ext = 0) => {
+var drawPlay = (ctx, p, fillColor, nodeColor) => {
     var w = 25;
     var h = 25;
     var x = p.x - w / 2;
     var y = p.y - h / 2;
 
-    //Draw triangle
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 12, 0, 2 * Math.PI);
+    ctx.strokeStyle = fillColor;
+    ctx.lineWidth = 0;
+    ctx.fillStyle = fillColor;
+    ctx.circle(p.x, p.y, 12 );
+    ctx.fill();
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
     ctx.moveTo(x + 10, y + 7.5);
     ctx.lineTo(x + 10, y + 17.5);
     ctx.lineTo(x + 18.66, y + 12.5);
     ctx.lineTo(x + 10, y + 7.5);
-    ctx.fillStyle = fillColor;
+    ctx.fillStyle = nodeColor;
     ctx.fill();
+    ctx.closePath();
 
 }
 
-var drawPause = (ctx, p, pauseColor, nodeColor, ext = 0) => {
+var drawPause = (ctx, p, pauseColor, nodeColor) => {
 
+    ctx.beginPath();
     ctx.strokeStyle = pauseColor;
     ctx.lineWidth = 3;
     ctx.fillStyle = nodeColor;
-    ctx.circle(p.x, p.y, 12 + ext);
+    ctx.circle(p.x, p.y, 12);
     ctx.fill();
+    ctx.closePath();
     ctx.stroke();
 
     ctx.beginPath();
@@ -38,35 +48,32 @@ var drawPause = (ctx, p, pauseColor, nodeColor, ext = 0) => {
 
 var GraphView = Polymer(<any>{
     is: 'graph-view',
-    properties: {
-        hello: {
-            type: String,
-            value: "Hello"
-        }
-    },
+    properties: {},
     ready: function () {
         // create a network
         var container = document.getElementById('graphDiv');
 
         var nodes = new DataSet([
             { id: 1, label: '1', car: new Car("XYZ", "2016") },
-            { id: 2, label: '2', shapeColor: 'rejected' },
             { id: 3, label: '3' },
+            { id: 2, label: '2', shapeColor: 'rejected' },
             { id: 4, label: '4', shapeColor: 'accepted' },
-            { id: 5, label: '5', shapeColor: 'triggered' },
             { id: 6, label: '6' },
             { id: 7, label: '7', shapeColor: 'triggered' },
             { id: 8, label: '8', shapeColor: 'triggered' },
-            // { id: 9, label: '9' },
-            // { id: 10, label: '10' },
-            // { id: 11, label: '11' },
-            // { id: 12, label: '12' },
-            // { id: 13, label: '13' },
-            // { id: 14, label: '14' },
-            // { id: 15, label: '15' },
-            // { id: 16, label: '16' },
-            // { id: 17, label: '17' },
-
+            { id: 9, label: '9' },
+            { id: 5, label: '5', shapeColor: 'triggered' },
+            { id: 11, label: '11' },
+            { id: 10, label: '10' },
+            { id: 12, label: '12' },
+            { id: 13, label: '13' },
+            { id: 14, label: '14' },
+            { id: 15, label: '15' },
+            { id: 16, label: '16' },
+            { id: 17, label: '17' },
+            { id: 18, label: '18' },
+            { id: 19, label: '19' },
+            { id: 20, label: '20' },
         ]);
 
         // create an array with edges
@@ -74,29 +81,39 @@ var GraphView = Polymer(<any>{
             { from: 1, to: 3, label: 'event', title: 'this is hover' },
             { from: 1, to: 4, label: 'event', title: 'this is hover' },
             { from: 1, to: 2, label: 'event', title: 'this is hover' },
-            { from: 2, to: 4, label: 'event', title: 'this is hover' },
-            { from: 2, to: 5, label: 'event', title: 'this is hover' },
+
+            { from: 3, to: 8, label: 'event', title: 'this is hover' },
+            { from: 3, to: 9, label: 'event', title: 'this is hover' },
+
             { from: 4, to: 10, label: 'event', title: 'this is hover' },
-            { from: 3, to: 4, label: 'event', title: 'this is hover' },
+            { from: 4, to: 11, label: 'event', title: 'this is hover' },
+
+            //{ from: 2, to: 11, label: 'event', title: 'this is hover' },
+            //{ from: 2, to: 9, label: 'event', title: 'this is hover' },
+            //{ from: 2, to: 4, label: 'event', title: 'this is hover' },
+            { from: 2, to: 5, label: 'event', title: 'this is hover' },
+
             { from: 6, to: 7, label: 'event', title: 'this is hover' },
             { from: 7, to: 7, label: 'event', title: 'this is hover' },
-            { from: 3, to: 8, label: 'event', title: 'this is hover' },
+            
             { from: 8, to: 9, label: 'event', title: 'this is hover' },
-            { from: 3, to: 8, label: 'event', title: 'this is hover' },
-            { from: 2, to: 9, label: 'event', title: 'this is hover' },
-            { from: 3, to: 9, label: 'event', title: 'this is hover' },
-            { from: 10, to: 11, label: 'event', title: 'this is hover' },
+
+            //{ from: 10, to: 11, label: 'event', title: 'this is hover' },
             { from: 10, to: 12, label: 'event', title: 'this is hover' },
-            { from: 2, to: 11, label: 'event', title: 'this is hover' },
-            { from: 10, to: 13, label: 'event', title: 'this is hover' },
+            //{ from: 10, to: 13, label: 'event', title: 'this is hover' },
             { from: 12, to: 16, label: 'event', title: 'this is hover' },
-            { from: 10, to: 11, label: 'event', title: 'this is hover' },
+            { from: 10, to: 13, label: 'event', title: 'this is hover' },
             { from: 11, to: 17, label: 'event', title: 'this is hover' },
-            { from: 10, to: 1, label: 'event', title: 'this is hover' },
+            //{ from: 10, to: 1, label: 'event', title: 'this is hover' },
             { from: 10, to: 15, label: 'event', title: 'this is hover' },
-            { from: 4, to: 11, label: 'event', title: 'this is hover' },
             { from: 10, to: 14, label: 'event', title: 'this is hover' },
             { from: 8, to: 11, label: 'event', title: 'this is hover' },
+            { from: 16, to: 1, label: 'event', title: 'this is hover' },
+            //{ from: 3, to: 4, label: 'event', title: 'this is hover' },
+
+
+            { from: 18, to: 19, label: 'event', title: 'this is hover' },
+            { from: 19, to: 20, label: 'event', title: 'this is hover' },
         ]);
 
         // provide the data in the vis format
@@ -112,8 +129,8 @@ var GraphView = Polymer(<any>{
                 margin: {
                     top: -10,
                     bottom: 10,
-                    left: 10,
-                    right: -10,
+                    left: 5,
+                    right: -5,
                 },
                 borderWidth: 1,
                 borderWidthSelected: 2,
@@ -143,6 +160,13 @@ var GraphView = Polymer(<any>{
                 fixed: {
                     x: true,
                     y: true
+                },
+                shadow: {
+                    enabled: true,
+                    color: 'rgba(0,0,0,1)',
+                    size: 10,
+                    x: 5,
+                    y: 5
                 },
                 heightConstraint: {
                     minimum: 53,
@@ -198,24 +222,26 @@ var GraphView = Polymer(<any>{
                 }
             },
             physics: {
-                enabled: false,
+                enabled: true,
                 barnesHut: {
                     gravitationalConstant: 0,
                     centralGravity: 0,
                     springConstant: 0,
+                    avoidOverlap: 1,
                 }
             },
             layout: {
                 improvedLayout: true,
                 hierarchical: {
                     enabled: true,
-                    treeSpacing: 100,
-                    nodeSpacing: 250,
-                    levelSeparation: 250,
-                    //parentCentralization: true,
+                    treeSpacing: 200,
+                    nodeSpacing: 150,
+                    levelSeparation: 200,
+                    parentCentralization: true,
+                    blockShifting: true,
+                    edgeMinimization: true,
                     direction: 'UD',
                     sortMethod: 'directed',
-                    edgeMinimization: true
                 }
             },
             interaction: {
@@ -225,6 +251,7 @@ var GraphView = Polymer(<any>{
 
         // initialize your network!
         var network = new Network(container, data, options);
+
         network.on('click', function (properties) {
 
             //nodes
@@ -241,11 +268,11 @@ var GraphView = Polymer(<any>{
                     }
                 });
 
-                if (playedNodes[0] && playedNodes[0].played) {
+                if (playedNodes[0] && playedNodes[0].played == true) {
                     playedNodes[0].played = false
                 }
 
-                if (clickedNodes[0] && clickedNodes[0].played) {
+                if (clickedNodes[0] && clickedNodes[0].played == true) {
                     clickedNodes[0].played = false;
                 } else {
                     clickedNodes[0].played = true;
@@ -265,14 +292,11 @@ var GraphView = Polymer(<any>{
 
         network.on('afterDrawing', function (ctx) {
             var pos = network.getPositions(nodes.getIds())
-
             nodes.forEach(node => {
                 if (node.played) {
-                    drawPlay(ctx, pos[node.id], '#FFFFFF')
                     drawPause(ctx, pos[node.id], '#3F51B5', '#FFFFFF')
                 } else {
-                    drawPause(ctx, pos[node.id], '#FFFFFF', '#FFFFFF')
-                    drawPlay(ctx, pos[node.id], '#3F51B5')
+                    drawPlay(ctx, pos[node.id], '#3F51B5', '#FFFFFF')
                 }
             });
         });
@@ -282,12 +306,12 @@ var GraphView = Polymer(<any>{
             var x = params.pointer.DOM.x;
             var y = params.pointer.DOM.y - 40;
             tooltip.innerHTML = "<p id='tooltip-text' >" + edges.get(params.edge).title + '</p>';
-            tooltip.setAttribute('style', 'top:' + y + 'px;left:' + x + 'px;visibility:visible;');
+            tooltip.setAttribute('style', 'top:' + y + 'px;left:' + x + 'px;display:block;');
         });
 
         network.on("blurEdge", function (params) {
             var tooltip = <HTMLElement>document.getElementById('custom-tooltip');
-            tooltip.setAttribute('style', 'visibility:hidden;');
+            tooltip.setAttribute('style', 'display:none;');
         });
     }
 });

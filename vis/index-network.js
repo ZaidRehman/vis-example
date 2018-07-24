@@ -9,7 +9,7 @@ exports.Queue = require('./lib/Queue');
 
 // Network
 exports.Network = require('./lib/network/Network');
-exports.network = {
+exports.network = {   
   Images: require('./lib/network/Images'),
   dotparser: require('./lib/network/dotparser'),
   gephiParser: require('./lib/network/gephiParser'),
