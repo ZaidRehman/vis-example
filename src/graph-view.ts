@@ -1,6 +1,6 @@
 /// <reference path="../bower_components/polymer-ts/polymer-ts.d.ts" />
-import { Network, DataSet } from '../vis/index-network'
-import { Car } from './Car';
+import { Network , DataSet} from '../vis/index-network'
+import { getDataFromJson } from './dataExtraction';
 
 var drawPlay = (ctx, p, fillColor, nodeColor) => {
     var w = 25;
@@ -12,7 +12,7 @@ var drawPlay = (ctx, p, fillColor, nodeColor) => {
     ctx.strokeStyle = fillColor;
     ctx.lineWidth = 0;
     ctx.fillStyle = fillColor;
-    ctx.circle(p.x, p.y, 12 );
+    ctx.circle(p.x, p.y, 12);
     ctx.fill();
     ctx.closePath();
     ctx.stroke();
@@ -50,77 +50,15 @@ var GraphView = Polymer(<any>{
     is: 'graph-view',
     properties: {},
     ready: function () {
+
         // create a network
-        var container = document.getElementById('graphDiv');
-
-        var nodes = new DataSet([
-            { id: 1, label: '1', car: new Car("XYZ", "2016") },
-            { id: 3, label: '3' },
-            { id: 2, label: '2', shapeColor: 'rejected' },
-            { id: 4, label: '4', shapeColor: 'accepted' },
-            { id: 6, label: '6' },
-            { id: 7, label: '7', shapeColor: 'triggered' },
-            { id: 8, label: '8', shapeColor: 'triggered' },
-            { id: 9, label: '9' },
-            { id: 5, label: '5', shapeColor: 'triggered' },
-            { id: 11, label: '11' },
-            { id: 10, label: '10' },
-            { id: 12, label: '12' },
-            { id: 13, label: '13' },
-            { id: 14, label: '14' },
-            { id: 15, label: '15' },
-            { id: 16, label: '16' },
-            { id: 17, label: '17' },
-            { id: 18, label: '18' },
-            { id: 19, label: '19' },
-            { id: 20, label: '20' },
-        ]);
-
-        // create an array with edges
-        var edges = new DataSet([
-            { from: 1, to: 3, label: 'event', title: 'this is hover' },
-            { from: 1, to: 4, label: 'event', title: 'this is hover' },
-            { from: 1, to: 2, label: 'event', title: 'this is hover' },
-
-            { from: 3, to: 8, label: 'event', title: 'this is hover' },
-            { from: 3, to: 9, label: 'event', title: 'this is hover' },
-
-            { from: 4, to: 10, label: 'event', title: 'this is hover' },
-            { from: 4, to: 11, label: 'event', title: 'this is hover' },
-
-            //{ from: 2, to: 11, label: 'event', title: 'this is hover' },
-            //{ from: 2, to: 9, label: 'event', title: 'this is hover' },
-            //{ from: 2, to: 4, label: 'event', title: 'this is hover' },
-            { from: 2, to: 5, label: 'event', title: 'this is hover' },
-
-            { from: 6, to: 7, label: 'event', title: 'this is hover' },
-            { from: 7, to: 7, label: 'event', title: 'this is hover' },
-            
-            { from: 8, to: 9, label: 'event', title: 'this is hover' },
-
-            //{ from: 10, to: 11, label: 'event', title: 'this is hover' },
-            { from: 10, to: 12, label: 'event', title: 'this is hover' },
-            //{ from: 10, to: 13, label: 'event', title: 'this is hover' },
-            { from: 12, to: 16, label: 'event', title: 'this is hover' },
-            { from: 10, to: 13, label: 'event', title: 'this is hover' },
-            { from: 11, to: 17, label: 'event', title: 'this is hover' },
-            //{ from: 10, to: 1, label: 'event', title: 'this is hover' },
-            { from: 10, to: 15, label: 'event', title: 'this is hover' },
-            { from: 10, to: 14, label: 'event', title: 'this is hover' },
-            { from: 8, to: 11, label: 'event', title: 'this is hover' },
-            { from: 16, to: 1, label: 'event', title: 'this is hover' },
-            //{ from: 3, to: 4, label: 'event', title: 'this is hover' },
-
-
-            { from: 18, to: 19, label: 'event', title: 'this is hover' },
-            { from: 19, to: 20, label: 'event', title: 'this is hover' },
-        ]);
-
+        var container = document.getElementById('graphDiv')
         // provide the data in the vis format
-        var data = {
-            nodes: nodes,
-            edges: edges
-        };
+        var data = getDataFromJson();
+
+        var nodes: DataSet = data.nodes;
+        var edges: DataSet = data.edges;
+
         var options = {
             autoResize: true,
             height: '100%',
@@ -193,7 +131,7 @@ var GraphView = Polymer(<any>{
                     inherit: 'from',
                     opacity: 1.0
                 },
-                length: 50,
+                length: 100,
                 scaling: {
                     label: true,
                 },
@@ -209,40 +147,27 @@ var GraphView = Polymer(<any>{
                     multi: false,
                 },
                 hoverWidth: 0,
-                labelHighlightBold: false,
+                labelHighlightBold: true,
                 selectionWidth: 1,
                 shadow: false,
-                smooth: {
-                    enabled: true,
-                    type: "cubicBezier",
-                    roundness: .8
-                },
                 widthConstraint: {
                     maximum: 50,
                 }
             },
-            physics: {
-                enabled: true,
-                barnesHut: {
-                    gravitationalConstant: 0,
-                    centralGravity: 0,
-                    springConstant: 0,
-                    avoidOverlap: 1,
-                }
-            },
+            physics: false,
             layout: {
-                improvedLayout: true,
-                hierarchical: {
-                    enabled: true,
-                    treeSpacing: 200,
-                    nodeSpacing: 150,
-                    levelSeparation: 200,
-                    parentCentralization: true,
-                    blockShifting: true,
-                    edgeMinimization: true,
-                    direction: 'UD',
-                    sortMethod: 'directed',
-                }
+                randomSeed: 159600,
+                //improvedLayout: true,
+                // hierarchical: {
+                //     enabled: true,
+                //     treeSpacing: 200,
+                //     nodeSpacing: 150,
+                //     levelSeparation: 200,
+                //     parentCentralization: true,
+                //     blockShifting: true,
+                //     edgeMinimization: true,
+                //     direction: 'UD',
+                // }
             },
             interaction: {
                 hover: true,
@@ -291,6 +216,7 @@ var GraphView = Polymer(<any>{
         });
 
         network.on('afterDrawing', function (ctx) {
+            console.log(network.getSeed())
             var pos = network.getPositions(nodes.getIds())
             nodes.forEach(node => {
                 if (node.played) {
@@ -305,7 +231,7 @@ var GraphView = Polymer(<any>{
             var tooltip = <HTMLElement>document.getElementById('custom-tooltip');
             var x = params.pointer.DOM.x;
             var y = params.pointer.DOM.y - 40;
-            tooltip.innerHTML = "<p id='tooltip-text' >" + edges.get(params.edge).title + '</p>';
+            tooltip.innerHTML = "<p class='tooltip-text' >" + edges.get(params.edge).title + '</p>';
             tooltip.setAttribute('style', 'top:' + y + 'px;left:' + x + 'px;display:block;');
         });
 

@@ -19,7 +19,7 @@ canvas {
     display: block;
 }
 
-#tooltip-text {
+.tooltip-text {
     font-family: Roboto;
     font-size: 14px;
     font-weight: normal;
