@@ -13,11 +13,11 @@ var Icon = require('./nodes/shapes/Icon').default;
 var Image = require('./nodes/shapes/Image').default;
 var Square = require('./nodes/shapes/Square').default;
 var Hexagon = require('./nodes/shapes/Hexagon').default;
-var Dialog = require('./nodes/shapes/Dialog').default;
 var Star = require('./nodes/shapes/Star').default;
 var Text = require('./nodes/shapes/Text').default;
 var Triangle = require('./nodes/shapes/Triangle').default;
 var TriangleDown = require('./nodes/shapes/TriangleDown').default;
+var Dialog = require('./nodes/shapes/Dialog').default;
 
 
 /**
@@ -146,19 +146,20 @@ class Node {
   /**
    * Load the images from the options, for the nodes that need them.
    *
-   * TODO: The imageObj members should be moved to CircularImageBase.
-   *       It's the only place where they are required.
+   * Images are always loaded, even if they are not used in the current shape.
+   * The user may switch to an image shape later on.
    *
    * @private
    */
   _load_images() {
-    // Don't bother loading for nodes without images
-    if (this.options.shape !== 'circularImage' && this.options.shape !== 'image') {
-      return;
+    if (this.options.shape === 'circularImage' || this.options.shape === 'image') {
+      if (this.options.image === undefined) {
+        throw new Error("Option image must be defined for node type '" + this.options.shape + "'");
+      }
     }
 
     if (this.options.image === undefined) {
-      throw new Error("Option image must be defined for node type '" + this.options.shape + "'");
+      return;
     }
 
     if (this.imagelist === undefined) {
@@ -211,8 +212,12 @@ class Node {
     var groupObj = groupList.get(group);
 
     // Skip merging of group font options into parent; these are required to be distinct for labels
-    // TODO: It might not be a good idea either to merge the rest of the options, investigate this. 
-    util.selectiveNotDeepExtend(['font'], parentOptions, groupObj);
+    // Also skip mergin of color IF it is already defined in the node itself. This is to avoid the color of the
+    // group overriding the color set at the node level
+    // TODO: It might not be a good idea either to merge the rest of the options, investigate this.
+    var skipProperties = ['font'];
+    if (newOptions !== undefined && newOptions.color !== undefined && newOptions.color != null) skipProperties.push('color');
+    util.selectiveNotDeepExtend(skipProperties, parentOptions, groupObj);
 
     // the color object needs to be completely defined.
     // Since groups can partially overwrite the colors, we parse it again, just in case.
@@ -425,7 +430,7 @@ class Node {
           this.shape = new TriangleDown(this.options, this.body, this.labelModule);
           break;
         case 'dialog':
-          this.shape = new Dialog(this.options,this.body,this.labelModule);
+          this.shape = new Dialog(this.options, this.body, this.labelModule);
           break;
         default:
           this.shape = new Ellipse(this.options, this.body, this.labelModule);
@@ -648,7 +653,7 @@ class Node {
         strId = ' in node id: ' + id;
       }
       console.log('%cNegative or zero mass disallowed' + strId +
-                  ', setting mass to 1.');
+                  ', setting mass to 1.' , printStyle);
       options.mass = 1;
     }
   }

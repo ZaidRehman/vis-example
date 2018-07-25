@@ -1,5 +1,5 @@
 /// <reference path="../bower_components/polymer-ts/polymer-ts.d.ts" />
-import { Network , DataSet} from '../vis/index-network'
+import { Network, DataSet } from '../vis/index-network'
 import { getDataFromJson } from './dataExtraction';
 
 var drawPlay = (ctx, p, fillColor, nodeColor) => {
@@ -154,20 +154,34 @@ var GraphView = Polymer(<any>{
                     maximum: 50,
                 }
             },
-            physics: false,
+            physics: {
+                hierarchicalRepulsion: {
+                    centralGravity: 0.0,
+                    springLength: 100,
+                    springConstant: 0.01,
+                    nodeDistance: 300,
+                    damping: 0.09
+                },
+                solver: 'hierarchicalRepulsion',
+                stabilization: {
+                    enabled: true,
+                    iterations: 10000,
+                    fit: true
+                },
+            },
             layout: {
-                randomSeed: 159600,
-                //improvedLayout: true,
-                // hierarchical: {
-                //     enabled: true,
-                //     treeSpacing: 200,
-                //     nodeSpacing: 150,
-                //     levelSeparation: 200,
-                //     parentCentralization: true,
-                //     blockShifting: true,
-                //     edgeMinimization: true,
-                //     direction: 'UD',
-                // }
+                // randomSeed: 367848,
+                improvedLayout: true,
+                hierarchical: {
+                    enabled: true,
+                    treeSpacing: 200,
+                    nodeSpacing: 150,
+                    levelSeparation: 200,
+                    parentCentralization: true,
+                    blockShifting: true,
+                    edgeMinimization: true,
+                    direction: 'UD',
+                }
             },
             interaction: {
                 hover: true,
