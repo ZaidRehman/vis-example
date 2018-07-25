@@ -21,24 +21,65 @@ var getEdges = (segueTriggers, from): Edge[] => {
     return toRet
 }
 
+let calculatedEdges = [];
+let processedDialogs = [];
+let calculatedNodes = new DataSet({});
+let x = 1;
+let y = 1;
+let posNodes = {};
+var process = (dialogs, dialog) => {
+    if (processedDialogs.indexOf(dialog.id) == -1) {
+        processedDialogs.push(dialog.id);
+        calculatedNodes.add({ id: dialog.id, label: dialog.id.toString(), x: posNodes[dialog.id][x] * 100, y: y * 100 })
+        y = 1;
+        x = 1;
+        dialog.segueTriggers.forEach(segueTrigger => {
+            x++;
+            calculatedEdges.push({ from: dialog.id, to: segueTrigger.segue.to});
+            posNodes[segueTrigger.segue.to][x] = x
+        });
+
+        calculatedEdges.forEach(edge => {
+            if (edge.from == dialog.id) {
+                y++;
+                process(dialogs, dialogs[edge.to - 1]);
+            }
+        })
+    }
+}
+
+
 export var getDataFromJson = (): DataSet => {
     var options = {};
-    var edgesArray = []
     var nodes = new DataSet(options);
     var edges = new DataSet(options);
 
     // Get data from JSON file
-    var json = require('./data.json').plan.dialogs;
-
-    for (let key in json) {
-        nodes.add({ id: json[key].id, label: json[key].id.toString() });
-        edgesArray = getEdges(json[key].segueTriggers, json[key].id);
-
-        edges.add(edgesArray)
+    var dialogs = require('./data.json').plan.dialogs;
+    let startingDialogs = [];
+    startingDialogs.push(dialogs[0]);
+    startingDialogs.push(...dialogs.filter(d => {
+        return d.jumpSegueTrigger.triggerStrings.length >= 1;
+    }));
+    startingDialogs.forEach(d => {
+        process(dialogs, d)
+    });
+    for (let key in dialogs) {
+        nodes.add({ id: dialogs[key].id, label: dialogs[key].id.toString(), x: Number(key) * 100, y: Number(key) * 100 });
     }
+    calculatedEdges.sort((a, b) => {
+        return a.from - b.from;
+    })
+    calculatedEdges.forEach((e) => {
+        edges.add({ to: e.to, from: e.from });
+    })
+
+    console.log(calculatedEdges);
     var data = {
-        nodes: nodes,
+        nodes: calculatedNodes,
         edges: edges,
     };
+
     return data;
 }
+
